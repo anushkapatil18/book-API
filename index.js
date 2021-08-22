@@ -1,7 +1,20 @@
+require('dotenv').config();
 const express = require("express");
+const mongoose = require('mongoose');
 
 // import the database
 const Database = require("./database");
+
+
+mongoose.connect(process.env.MONGO_URI  ,
+  {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+  }
+).then(() => console.log('connection estabilished'))
+ .catch((err) => console.log("error"));
 
 //initialization
 const OurApp = express(); //OurApp contains express
