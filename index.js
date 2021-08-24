@@ -2,6 +2,11 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require('mongoose');
 
+//importing different schemas
+const Book = require('./schema/book');
+const Author = require('./schema/author');
+const Publication = require('./schema/publication');
+
 // import the database
 const Database = require("./database");
 
@@ -33,8 +38,9 @@ OurApp.get("/",(request,response)=>{
 // Method   - GET
 // Params   - none
 // Body     - none
-OurApp.get("/book",(req,res) => {
-    return res.json({books: Database.Book})
+OurApp.get("/book", async (req,res) => {
+    const getAllBooks = await Book.find();
+    return res.json(getAllBooks);
 });
 
 // Route    - /book/:bookID
@@ -43,10 +49,14 @@ OurApp.get("/book",(req,res) => {
 // Method   - GET
 // Params   - bookID
 // Body     - none
-OurApp.get("/book/:bookID",(req,res) => {
-    const getBook = Database.Book.filter((book) => book.ISBN === req.params.bookID);
-
-    return res.json({books: getBook});
+OurApp.get("/book/:bookID",async (req,res) => {
+    const getSpecificBook = await Book.findOne({ISBN: req.params.bookID});
+    if(!getSpecificBook){
+        return res.json({
+            error: `No book found for the ISBN of ${req.params.bookID}`,
+        });
+    }
+    return res.json({book: getSpecificBook});
 });
 
 // Route    - /book/c/:catgory
@@ -55,12 +65,14 @@ OurApp.get("/book/:bookID",(req,res) => {
 // Method   - GET
 // Params   - category
 // Body     - none
-OurApp.get("/book/c/:category",(req,res) => {
-    const getBook = Database.Book.filter((book) => 
-       book.category.includes(req.params.category)
-    );
-
-    return res.json({books: getBook});
+OurApp.get("/book/c/:category",async (req,res) => {
+    const getSpecBook = await Book.findOne({category: req.params.category});
+    if(!getSpecBook){
+        return res.json({
+            error: `No book found for the category of ${req.params.category}`,
+        });
+    }
+    return res.json({book: getSpecBook});
 });
 
 
@@ -70,12 +82,14 @@ OurApp.get("/book/c/:category",(req,res) => {
 // Method   - GET
 // Params   - author
 // Body     - none
-OurApp.get("/book/a/:authors",(req,res) => {
-    var getBook = Database.Book.filter((book) => 
-       book.authors.includes(parseInt(req.params.authors))
-    );
-
-    return res.json({books: getBook});
+OurApp.get("/book/a/:authors", async (req,res) => {
+    const getSpBook = await Book.findOne({authors: req.params.authors});
+    if(!getSpBook){
+        return res.json({
+            error: `No book found for the authors of ${req.params.authors}`,
+        });
+    }
+    return res.json({book: getSpBook});
 });
 
 // Route    - /author
@@ -84,8 +98,9 @@ OurApp.get("/book/a/:authors",(req,res) => {
 // Method   - GET
 // Params   - none
 // Body     - none
-OurApp.get("/author",(req,res) => {
-    return res.json({author: Database.Author})
+OurApp.get("/author",async(req,res) => {
+    const getAllAuthors = await Author.find();
+    return res.json(getAllAuthors);
 });
 
 // Route    - /author/:authorID
@@ -94,10 +109,14 @@ OurApp.get("/author",(req,res) => {
 // Method   - GET
 // Params   - authorID
 // Body     - none
-OurApp.get("/author/:authorID",(req,res) => {
-    var getBook = Database.Author.filter((author) => author.books === req.params.authorID);
-
-    return res.json({author: getBook});
+OurApp.get("/author/:authorID",async (req,res) => {
+    const getSpecificAuthor = await Author.findOne({id: req.params.authorID});
+    if(!getSpecificAuthor){
+        return res.json({
+            error: `No author found for the id of ${req.params.authorID}`,
+        });
+    }
+    return res.json({book: getSpecificBook});
 });
 
 
@@ -107,8 +126,9 @@ OurApp.get("/author/:authorID",(req,res) => {
 // Method   - GET
 // Params   - none
 // Body     - none
-OurApp.get("/publication",(req,res) => {
-    return res.json({publication: Database.Publication})
+OurApp.get("/publication",async (req,res) => {
+    const getAllPublication = await Publication.find();
+    return res.json(getAllPublication);
 });
 
 // Route    - /publication/:id
@@ -117,10 +137,14 @@ OurApp.get("/publication",(req,res) => {
 // Method   - GET
 // Params   - bookID
 // Body     - none
-OurApp.get("/publication/:id",(req,res) => {
-    const getBook = Database.Publication.filter((publication) => publication.id === parseInt(req.params.id));
-
-    return res.json({publication: getBook});
+OurApp.get("/publication/:id",async (req,res) => {
+    const getSpecificPublication = await Publication.findOne({id: req.params.id});
+    if(!getSpecificPublication){
+        return res.json({
+            error: `No publication found for the ISBN of ${req.params.id}`,
+        });
+    }
+    return res.json({publication: getSpecificPublication});
 });
 
 // Route    - /publication/p/:nam
@@ -129,12 +153,14 @@ OurApp.get("/publication/:id",(req,res) => {
 // Method   - GET
 // Params   - category
 // Body     - none
-OurApp.get("/publication/p/:nam",(req,res) => {
-    const getBook = Database.Publication.filter((publication) => 
-       publication.name === (req.params.nam)
-    );
-
-    return res.json({publication: getBook});
+OurApp.get("/publication/p/:nam",async (req,res) => {
+    const getSpecificPublication = await Publication.findOne({name: req.params.nam});
+    if(!getSpecificPublication){
+        return res.json({
+            error: `No publication found for the ISBN of ${req.params.nam}`,
+        });
+    }
+    return res.json({publication: getSpecificPublication});
 });
 
 // Route    - /book/new
@@ -143,12 +169,14 @@ OurApp.get("/publication/p/:nam",(req,res) => {
 // Method   - POST
 // Params   - none
 // Body     - none
-OurApp.post("/book/new",(req,res) => {
-    const {newBook} = req.body;
-    //add new data to database
-    Database.Book.push(newBook);
-
-    return res.json(Database.Book);
+OurApp.post("/book/new",async(req,res) => {
+    try{
+        const{newBook} = req.body;
+        await Book.create(newBook);
+        return res.json({message: "Book added to the database"});
+    }catch(error){
+        return res.json({error: error.message});
+    }
 });
 
 // Route    - /author/new
@@ -157,12 +185,14 @@ OurApp.post("/book/new",(req,res) => {
 // Method   - POST
 // Params   - none
 // Body     - none
-OurApp.post("/author/new",(req,res) => {
-    const {newAuthor} = req.body;
-    
-    Database.Author.push(newAuthor);
-
-    return res.json(Database.Author);
+OurApp.post("/author/new",async (req,res) => {
+   try{
+        const{newAuthor} = req.body;
+        await Author.create(newAuthor);
+        return res.json({message: "Author added to the database"});
+    }catch(error){
+        return res.json({error: error.message});
+    }
 });
 
 // Route    - /publication/new
@@ -171,12 +201,14 @@ OurApp.post("/author/new",(req,res) => {
 // Method   - POST
 // Params   - none
 // Body     - none
-OurApp.post("/publication/new",(req,res) => {
-    const {newPublication} = req.body;
-    
-    Database.Publication.push(newPublication);
-
-    return res.json(Database.Publication);
+OurApp.post("/publication/new",async(req,res) => {
+    try{
+        const{newPublication} = req.body;
+        await Publication.create(newPublication);
+        return res.json({message: "Publication added to the database"});
+    }catch(error){
+        return res.json({error: error.message});
+    }
 });
 
 // Route    - /book/update/:isbn
