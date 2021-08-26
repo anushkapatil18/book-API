@@ -1,0 +1,27 @@
+Basic operators which u find in JavaScript are:
+1. Arithmetic Operators (+,-,/,*,%,++,--, )
+2. Comparison (Relational) Operators (==. ===. !=., !==, >, >=, <, <=)
+3. Bitwise Operators (&, |, <<, >>)
+4. Logical Operators(&&, ||, !)
+5. Assignment Operators (=, +=, -=, *=, /=, %=)
+
+MongoDB Operators -> Powerfull yet developers won't use them
+
+Arrays [1,2,3,4]
+$push
+$pop -> remove element from last
+$pull -> pop with partivular location
+example: $pull{ authors: 1}
+$addToSet -> clever way of pushing data into array
+
+$inc example: $inc{ postCount: +1} postCount 20 -> 21
+$min example: $min{ amount}
+$max
+$set 
+$unset -> deleting a partiular key value
+Book.update(
+    { sku: "new value" },
+    { $unset { quantity: "", instaock: ""},
+       $inc { postCount: +2}
+    }
+)

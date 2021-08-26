@@ -3,7 +3,7 @@ const { Book } = require('../database');
 
 //Create book schema
 const BookSchema = mongoose.Schema({
-    ISBM: {
+    ISBN: {
         type: String,
         require: true,
     },
@@ -20,6 +20,6 @@ const BookSchema = mongoose.Schema({
 });
 
 //Create book model
-const BookModel = mongoose.model('book',BookSchema);
+const BookModel = mongoose.model('books',BookSchema);
 
 module.exports = BookModel;
